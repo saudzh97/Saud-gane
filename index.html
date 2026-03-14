@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لعبة القنص</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+#game-container {
+  width: 500px;
+  height: 400px;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  position: relative;
+  overflow: hidden;
+  cursor: crosshair; /* تغيير المؤشر إلى شكل صليب للقنص */
+}
+
+#target {
+  width: 50px;
+  height: 50px;
+  background-color: red; /* لون الهدف الافتراضي */
+  border-radius: 50%; /* شكل الهدف دائري */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* تمركز الهدف */
+  /* يمكنك استخدام صورة بدلاً من ذلك عن طريق استبدال "background-color" بـ:
+     background-image: url('target.png'); 
+     background-size: cover; 
+     border-radius: 0; 
+  */
+}
+
+#score {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+#timer {
+  font-size: 18px;
+  margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<div id="game-container">
+  <div id="target"></div>
+</div>
+
+<div>
+  <div id="score">النقاط: 0</div>
+  <div id="timer">الوقت المتبقي: 10 ثوانٍ</div>
+</div>
+
+<script>
+const gameContainer = document.getElementById('game-container');
+const target = document.getElementById('target');
+const scoreElement = document.getElementById('score');
+const timerElement = document.getElementById('timer');
+
+let score = 0;
+let timeLeft = 10;
+let isPlaying = false;
+
+// وظيفة لبدء اللعبة
+function startGame() {
+  score = 0;
+  timeLeft = 10;
+  isPlaying = true;
+  scoreElement.textContent = 'النقاط: ' + score;
+  timerElement.textContent = 'الوقت المتبقي: ' + timeLeft + ' ثوانٍ';
+
+  // نقل الهدف عشوائيًا في البداية
+  moveTarget();
+
+  // بدء العد التنازلي
+  const timerInterval = setInterval(() => {
+    if (isPlaying) {
+      timeLeft--;
+      timerElement.textContent = 'الوقت المتبقي: ' + timeLeft + ' ثوانٍ';
+
+      if (timeLeft === 0) {
+        isPlaying = false;
+        clearInterval(timerInterval);
+        alert('انتهت اللعبة! نقاطك هي: ' + score);
+      }
+    }
+  }, 1000);
+}
+
+// وظيفة لنقل الهدف عشوائيًا
+function moveTarget() {
+  const containerWidth = gameContainer.offsetWidth;
+  const containerHeight = gameContainer.offsetHeight;
+  const targetSize = target.offsetWidth;
+
+  const randomX = Math.floor(Math.random() * (containerWidth - targetSize));
+  const randomY = Math.floor(Math.random() * (containerHeight - targetSize));
+
+  target.style.left = randomX + 'px';
+  target.style.top = randomY + 'px';
+}
+
+// إضافة حدث النقر على الهدف
+target.addEventListener('click', () => {
+  if (isPlaying) {
+    score++;
+    scoreElement.textContent = 'النقاط: ' + score;
+    moveTarget(); // نقل الهدف بعد النقر عليه
+  }
+});
+
+// بدء اللعبة في البداية (اختياري، يمكنك إضافة زر "ابدأ" بدلاً من ذلك)
+startGame();
+</script>
+
+</body>
+</html>
