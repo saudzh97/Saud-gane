@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لعبة سعود - سودوكو</title>
+    <style>
+        :root {
+            /* تحديث لون الخلفية إلى اللون الأحمر */
+            --bg-color: #8b0000; 
+            --container-bg: #ffffff;
+            --primary-color: #d32f2f; /* لون أحمر للعناصر الأساسية */
+            --secondary-color: #fce4ec;
+            --text-color: #2d3748;
+            --error-color: #ff5252;
+            --highlight-color: #ffebee;
+            --selected-color: #ffcdd2;
+            --border-dark: #2d3748;
+            --border-light: #cbd5e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: var(--container-bg);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 { margin-bottom: 1rem; color: var(--primary-color); }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
+
+        select, button {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        button:hover { opacity: 0.9; }
+
+        .sudoku-grid {
+            display: grid;
+            grid-template-columns: repeat(9, 1fr);
+            border: 2px solid var(--border-dark);
+            margin: 0 auto 1.5rem;
+            aspect-ratio: 1 / 1;
+            user-select: none;
+            background-color: white;
+        }
+
+        .cell {
+            border: 1px solid var(--border-light);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: clamp(16px, 4vw, 24px);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        /* Thicker borders for 3x3 grids */
+        .cell:nth-child(3n) { border-left: 2px solid var(--border-dark); }
+        .cell:nth-child(9n) { border-left: 1px solid var(--border-light); }
+        .cell:nth-child(n+19):nth-child(-n+27),
+        .cell:nth-child(n+46):nth-child(-n+54) { border-bottom: 2px solid var(--border-dark); }
+
+        .cell.fixed { color: #1a202c; background: #f9f9f9; cursor: default; }
+        .cell.selected { background-color: var(--selected-color) !important; }
+        .cell.highlight { background-color: var(--highlight-color); }
+        .cell.error { color: var(--error-color); background-color: #ffdada; }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .key {
+            padding: 12px;
+            background: var(--secondary-color);
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            border: 1px solid #ffc1c1;
+        }
+
+        .key:hover { background: #ffc1c1; }
+        .key.clear { grid-column: span 1; background: #ff8a80; color: white; }
+
+        .status-msg {
+            margin-top: 1rem;
+            font-weight: bold;
+            min-height: 24px;
+        }
+
+        @media (max-width: 480px) {
+            .game-container { padding: 1rem; }
+            .keypad { gap: 5px; }
+            .key { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <h1>لعبة سعود</h1>
+    
+    <div class="controls">
+        <select id="difficulty">
+            <option value="easy">سهل</option>
+            <option value="medium" selected>متوسط</option>
+            <option value="hard">صعب</option>
+        </select>
+        <button onclick="startNewGame()">لعبة جديدة</button>
+    </div>
+
+    <div id="grid" class="sudoku-grid"></div>
+
+    <div class="keypad">
+        <div class="key" onclick="handleInput(1)">1</div>
+        <div class="key" onclick="handleInput(2)">2</div>
+        <div class="key" onclick="handleInput(3)">3</div>
+        <div class="key" onclick="handleInput(4)">4</div>
+        <div class="key" onclick="handleInput(5)">5</div>
+        <div class="key" onclick="handleInput(6)">6</div>
+        <div class="key" onclick="handleInput(7)">7</div>
+        <div class="key" onclick="handleInput(8)">8</div>
+        <div class="key" onclick="handleInput(9)">9</div>
+        <div class="key clear" onclick="handleInput(0)">✖</div>
+    </div>
+
+    <div id="status" class="status-msg"></div>
+</div>
+
+<script>
+    let grid = [];
+    let solution = [];
+    let selectedCell = null;
+
+    window.onload = () => {
+        startNewGame();
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '1' && e.key <= '9') handleInput(parseInt(e.key));
+            else if (e.key === 'Backspace' || e.key === 'Delete') handleInput(0);
+        });
+    };
+
+    function startNewGame() {
+        const difficulty = document.getElementById('difficulty').value;
+        generateSudoku();
+        removeNumbers(difficulty);
+        renderGrid();
+        document.getElementById('status').innerText = "";
+    }
+
+    function generateSudoku() {
+        grid = Array(9).fill().map(() => Array(9).fill(0));
+        fillBoard(grid);
+        solution = grid.map(row => [...row]);
+    }
+
+    function fillBoard(board) {
+        for (let i = 0; i < 81; i++) {
+            let row = Math.floor(i / 9);
+            let col = i % 9;
+            if (board[row][col] === 0) {
+                let nums = [1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+                for (let num of nums) {
+                    if (isValid(board, row, col, num)) {
+                        board[row][col] = num;
+                        if (fillBoard(board)) return true;
+                        board[row][col] = 0;
+                    }
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function isValid(board, row, col, num) {
+        for (let i = 0; i < 9; i++) {
+            if (board[row][i] === num || board[i][col] === num) return false;
+        }
+        let startRow = Math.floor(row / 3) * 3;
+        let startCol = Math.floor(col / 3) * 3;
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (board[startRow + i][startCol + j] === num) return false;
+            }
+        }
+        return true;
+    }
+
+    function removeNumbers(difficulty) {
+        let attempts = difficulty === 'easy' ? 30 : difficulty === 'medium' ? 45 : 55;
+        while (attempts > 0) {
+            let row = Math.floor(Math.random() * 9);
+            let col = Math.floor(Math.random() * 9);
+            if (grid[row][col] !== 0) {
+                grid[row][col] = 0;
+                attempts--;
+            }
+        }
+    }
+
+    function renderGrid() {
+        const gridDiv = document.getElementById('grid');
+        gridDiv.innerHTML = '';
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                if (grid[r][c] !== 0) {
+                    cell.innerText = grid[r][c];
+                    cell.classList.add('fixed');
+                }
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                cell.onclick = () => selectCell(cell, r, c);
+                gridDiv.appendChild(cell);
+            }
+        }
+    }
+
+    function selectCell(cellElement, r, c) {
+        document.querySelectorAll('.cell').forEach(c => c.classList.remove('selected', 'highlight'));
+        selectedCell = { element: cellElement, r, c };
+        cellElement.classList.add('selected');
+        
+        const val = cellElement.innerText;
+        document.querySelectorAll('.cell').forEach(cell => {
+            if (cell.dataset.row == r || cell.dataset.col == c) {
+                cell.classList.add('highlight');
+            }
+            if (val && cell.innerText === val) {
+                cell.classList.add('highlight');
+            }
+        });
+    }
+
+    function handleInput(num) {
+        if (!selectedCell || selectedCell.element.classList.contains('fixed')) return;
+
+        const { element, r, c } = selectedCell;
+        
+        if (num === 0) {
+            element.innerText = '';
+            grid[r][c] = 0;
+            element.classList.remove('error');
+        } else {
+            element.innerText = num;
+            grid[r][c] = num;
+            
+            if (num !== solution[r][c]) {
+                element.classList.add('error');
+            } else {
+                element.classList.remove('error');
+                checkWin();
+            }
+        }
+        selectCell(element, r, c);
+    }
+
+    function checkWin() {
+        for (let r = 0; r < 9; r++) {
+            for (let c = 0; c < 9; c++) {
+                if (grid[r][c] !== solution[r][c]) return;
+            }
+        }
+        const status = document.getElementById('status');
+        status.innerText = "كفو يا سعود! مبروك الفوز! 🎉";
+        status.style.color = "#38a169";
+    }
+</script>
+
+</body>
+</html>
+
