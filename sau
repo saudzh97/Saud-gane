@@ -1,0 +1,69 @@
+import random
+
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.position = 0
+        self.money = 1500
+        self.properties = []
+
+class Property:
+    def __init__(self, name, price, rent):
+        self.name = name
+        self.price = price
+        self.rent = rent
+        self.owner = None
+
+# 1. إعداد اللوحة (العقارات)
+board = [
+    Property("البطحاء", 100, 10),
+    Property("شارع التحلية", 200, 20),
+    Property("طريق الملك فهد", 300, 30),
+    Property("حي النرجس", 400, 40),
+    Property("واجهة الرياض", 500, 50)
+]
+
+def play_turn(player):
+    print(f"\n--- دور اللاعب: {player.name} (الرصيد: {player.money} ريال) ---")
+    
+    # 2. رمي النرد
+    dice = random.randint(1, 6)
+    player.position = (player.position + dice) % len(board)
+    current_prop = board[player.position]
+    
+    print(f"🎲 رميت النرد وطلعت {dice}. أنت الآن في: {current_prop.name}")
+
+    # 3. منطق العقار
+    if current_prop.owner is None:
+        # خيار الشراء
+        if player.money >= current_prop.price:
+            choice = input(f"العقار متاح بـ {current_prop.price}. هل تريد الشراء؟ (نعم/لا): ")
+            if choice.lower() in ['نعم', 'y', 'yes']:
+                player.money -= current_prop.price
+                current_prop.owner = player
+                player.properties.append(current_prop)
+                print(f"✅ مبروك! اشتريت {current_prop.name}")
+        else:
+            print("❌ للأسف، ما عندك فلوس كافية للشراء.")
+            
+    elif current_prop.owner == player:
+        print("🏠 هذا عقارك، استرح قليلاً.")
+        
+    else:
+        # دفع الإيجار
+        rent = current_prop.rent
+        print(f"⚠️ هذا العقار ملك لـ {current_prop.owner.name}. لازم تدفع إيجار: {rent} ريال.")
+        player.money -= rent
+        current_prop.owner.money += rent
+        print(f"تم خصم المبلغ. رصيدك الحالي: {player.money}")
+
+# 4. تشغيل تجريبي للعبة
+p1 = Player("عزوز")
+p2 = Player("سارة")
+
+# محاكاة 3 جولات
+for i in range(3):
+    play_turn(p1)
+    play_turn(p2)
+
+print("\n--- نهاية اللعبة التجريبية ---")
