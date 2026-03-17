@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>سيرة الرسول ﷺ - Canvas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f4f0;
+            margin-top: 50px;
+        }
+        canvas {
+            background-color: #ffffff;
+            border: 5px solid #2e7d32;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+        h1 { color: #1b5e20; }
+        .controls { margin-bottom: 20px; }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background-color: #1b5e20; }
+    </style>
+</head>
+<body>
+
+    <h1>محطات من سيرة الرسول ﷺ</h1>
+    
+    <div class="controls">
+        <button onclick="drawEvent(0)">المولد</button>
+        <button onclick="drawEvent(1)">بعثته</button>
+        <button onclick="drawEvent(2)">الهجرة</button>
+        <button onclick="drawEvent(3)">فتح مكة</button>
+        <button onclick="drawEvent(4)">وفاته</button>
+    </div>
+
+    <canvas id="siraCanvas" width="800" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById('siraCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const events = [
+            { title: "المولد الشريف", date: "عام الفيل (571م)", desc: "وُلد النبي ﷺ في مكة المكرمة يتيماً." },
+            { title: "بعثة النبي ﷺ", date: "سن الأربعين", desc: "نزل الوحي عليه في غار حراء." },
+            { title: "الهجرة النبوية", date: "622م", desc: "هاجر من مكة إلى المدينة المنورة وتأسيس الدولة." },
+            { title: "فتح مكة", date: "8 هـ", desc: "دخل النبي ﷺ مكة فاتحاً بجيش عظيم." },
+            { title: "وفاة النبي ﷺ", date: "11 هـ", desc: "توفي في المدينة بعد أن أدى الأمانة وبلغ الرسالة." }
+        ];
+
+        // الحالة الابتدائية
+        function init() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#2e7d32";
+            ctx.font = "30px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText("اضغط على الأزرار في الأعلى لاستكشاف السيرة", canvas.width/2, canvas.height/2);
+        }
+
+        function drawEvent(index) {
+            const event = events[index];
+            
+            // مسح الشاشة
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // رسم الخلفية المزخرفة (إطار داخلي)
+            ctx.strokeStyle = "#cddc39";
+            ctx.lineWidth = 10;
+            ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+
+            // رسم العنوان
+            ctx.fillStyle = "#1b5e20";
+            ctx.font = "bold 40px Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(event.title, canvas.width/2, 100);
+
+            // رسم التاريخ
+            ctx.fillStyle = "#e65100";
+            ctx.font = "24px Arial";
+            ctx.fillText(event.date, canvas.width/2, 160);
+
+            // رسم الوصف (مع لف النص إذا كان طويلاً)
+            ctx.fillStyle = "#333";
+            ctx.font = "22px Arial";
+            ctx.fillText(event.desc, canvas.width/2, 250);
+
+            // إضافة لمسة جمالية (خط سفلي)
+            ctx.beginPath();
+            ctx.moveTo(200, 115);
+            ctx.lineTo(600, 115);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "#1b5e20";
+            ctx.stroke();
+        }
+
+        init();
+    </script>
+</body>
+</html>
