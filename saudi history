@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تاريخ الدولة السعودية</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        h1 {
+            color: #1a5d1a;
+            text-align: center;
+        }
+        h2 {
+            border-bottom: 2px solid #1a5d1a;
+            color: #2e7d32;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            background: #fff;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: right;
+        }
+        th {
+            background-color: #1a5d1a;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>تاريخ ومنجزات الدولة السعودية</h1>
+
+    <h2>الدولة السعودية الأولى (1744 - 1818م)</h2>
+    <table>
+        <tr>
+            <th>أبرز الحكام</th>
+            <th>أهم المنجزات</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>الإمام محمد بن سعود (المؤسس)</li>
+                    <li>الإمام عبدالعزيز بن محمد</li>
+                    <li>الإمام سعود بن عبدالعزيز</li>
+                    <li>الإمام عبدالله بن سعود</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>تأسيس الدولة على نهج التوحيد.</li>
+                    <li>بناء الدرعية كمركز سياسي وعلمي.</li>
+                    <li>تحقيق الأمن والاستقرار في شبه الجزيرة العربية.</li>
+                    <li>نشر العلم والمؤلفات الإسلامية.</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <h2>الدولة السعودية الثانية (1824 - 1891م)</h2>
+    <table>
+        <tr>
+            <th>أبرز الحكام</th>
+            <th>أهم المنجزات</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>الإمام تركي بن عبدالله (المؤسس)</li>
+                    <li>الإمام فيصل بن تركي</li>
+                    <li>أبناء الإمام فيصل (عبدالله، سعود، عبدالرحمن)</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>إعادة الوحدة الوطنية بعد سقوط الدولة الأولى.</li>
+                    <li>اتخاذ الرياض عاصمة للدولة.</li>
+                    <li>بناء قصر المصمك وتعزيز التحصينات.</li>
+                    <li>النجاح في مواجهة التحديات الخارجية والداخلية.</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+
+    <h2>الدولة السعودية الثالثة - المملكة العربية السعودية (1902م - الآن)</h2>
+    <table>
+        <tr>
+            <th>الحكام</th>
+            <th>أهم المنجزات</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li>الملك عبدالعزيز بن عبدالرحمن (المؤسس)</li>
+                    <li>الملك سعود، الملك فيصل، الملك خالد</li>
+                    <li>الملك فهد، الملك عبدالله</li>
+                    <li>خادم الحرمين الشريفين الملك سلمان بن عبدالعزيز</li>
+                </ul>
+            </td>
+            <td>
+                <ul>
+                    <li>توحيد كافة أرجاء البلاد تحت مسمى "المملكة العربية السعودية".</li>
+                    <li>اكتشاف النفط وبداية النهضة الاقتصادية.</li>
+                    <li>توسعة الحرمين الشريفين وتطوير الخدمات للمعتمرين.</li>
+                    <li>إطلاق "رؤية المملكة 2030" للتحول الوطني الشامل.</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>
